@@ -1,21 +1,68 @@
-const UserChallenge = () => {
-  return (
-    <div>
-      <form className='form'>
-        <h4>Add User</h4>
-        <div className='form-row'>
-          <label htmlFor='name' className='form-label'>
-            name
-          </label>
-          <input type='text' className='form-input' id='name' />
-        </div>
+import { useState } from 'react';
+import { data } from '../../../data';
 
-        <button type='submit' className='btn btn-block'>
-          submit
-        </button>
-      </form>
-      {/* render users below */}
-    </div>
-  );
+const UserChallenge = () => {
+   const [name, setName] = useState('');
+   const [users, setUsers] = useState(data);
+
+   const changeHandleName = (e) => {
+      setName(e.target.value);
+   };
+
+   const formSubmit = (e) => {
+      e.preventDefault();
+      if (!name) return;
+      const fakeId = 'unmatched';
+      const newUser = { id: fakeId, name };
+      const updatedUsers = [...users, newUser];
+      setUsers(updatedUsers);
+      setName('');
+   };
+
+   const removeUser = (id) => {
+      const updatedUsers = users.filter((person) => person.id !== id);
+      setUsers(updatedUsers);
+   };
+
+   return (
+      <div>
+         <form className="form" onSubmit={formSubmit}>
+            <h4>Add User</h4>
+            <div className="form-row">
+               <label htmlFor="name" className="form-label">
+                  name
+               </label>
+               <input
+                  type="text"
+                  className="form-input"
+                  id="name"
+                  value={name}
+                  onChange={changeHandleName}
+               />
+            </div>
+
+            <button type="submit" className="btn btn-block">
+               submit
+            </button>
+         </form>
+         {/* render users below */}
+         <h3 style={{ color: 'blueviolet' }}>Users</h3>
+         {users.map((user) => {
+            return (
+               <div key={user.id}>
+                  <h5>{user.name}</h5>
+                  <button
+                     className="btn"
+                     onClick={() => {
+                        removeUser(user.id);
+                     }}
+                  >
+                     remove
+                  </button>
+               </div>
+            );
+         })}
+      </div>
+   );
 };
 export default UserChallenge;
